@@ -4,6 +4,7 @@ type Company @collection(name: "company") {
 
 type Client @collection(name: "client") {
   name: String! @unique
+  balance: Int!
 }
 
 type Transaction {
@@ -12,7 +13,6 @@ type Transaction {
   narration: String
   credit: Float!
   debit: Float!
-  balance: Float!
   date: Time
 }
 

@@ -80,7 +80,7 @@ export default class CRUDClient extends Vue {
       return;
     }
     try {
-      await addClient({name: this.clientName});
+      await addClient({name: this.clientName, balance: 0});
       this.isPopupVisible = false;
       this.$emit('update');
     } catch (e) {

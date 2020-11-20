@@ -2,6 +2,7 @@
   <div class="h-client-list-container">
     <div v-for="client in clients" :key="client._id" class="box">
         <p class="title">{{ client.name }}</p>
+        <p class="content">Balance: {{ client.balance || 0 }}</p>
         <div class="is-flex">
           <b-button class="is-flex-grow-1" @click="addEntry">Add entry</b-button>
           <CRUDClient
