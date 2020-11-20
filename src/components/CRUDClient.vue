@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-button @click="isPopupVisible = true">{{ triggerName }}</b-button>
+    <b-button :class="customClass" @click="isPopupVisible = true">{{ triggerName }}</b-button>
     <CRUDClientModal
         v-model="clientName"
         :errorMessage="errorMessage"
@@ -29,6 +29,10 @@ import {Client} from "@/types/types";
     triggerName: {
       type: String,
       default: "Add"
+    },
+    customClass: {
+      type: String,
+      default: ""
     },
     meta: {
       type: Object,

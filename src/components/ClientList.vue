@@ -4,7 +4,13 @@
         <p class="title">{{ client.name }}</p>
         <div class="is-flex">
           <b-button class="is-flex-grow-1" @click="addEntry">Add entry</b-button>
-          <CRUDClient :meta="client" trigger-name="Edit" @update="$emit('update')"/>
+          <CRUDClient
+              :meta="client"
+              class="is-flex-grow-1 is-flex"
+              custom-class="is-flex-grow-1 h-client-edit-button"
+              trigger-name="Edit"
+              @update="$emit('update')"
+          />
           <b-button class="is-flex-grow-1" @click="deleteClientPrompt(client._id)">Delete</b-button>
         </div>
       </div>
@@ -49,9 +55,13 @@ export default class ClientList extends Vue {
   max-width: 100vw;
 }
 
+.h-client-edit-button {
+  margin: 0 6px;
+}
+
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  .h-client-list-container{
+  .h-client-list-container {
     grid-template-columns: 1fr;
   }
 }
@@ -68,5 +78,9 @@ export default class ClientList extends Vue {
   .h-client-list-container{
     grid-template-columns: 1fr 1fr 1fr;
   }
+}
+
+.box:last-child{
+  margin-bottom: 1.5rem;
 }
 </style>
