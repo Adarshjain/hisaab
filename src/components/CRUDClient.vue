@@ -56,7 +56,7 @@ export default class CRUDClient extends Vue {
   }
 
   mounted() {
-    this.CRUDType = this.meta._id ? "EDIT" : "ADD";
+    this.CRUDType = this.meta.id ? "EDIT" : "ADD";
   }
 
   @Watch('clientName')
@@ -85,11 +85,7 @@ export default class CRUDClient extends Vue {
       this.$emit('update');
     } catch (e) {
       this.isError = true;
-      if (e.graphQLErrors[0].extensions.code === "instance not unique") {
-        this.errorMessage = "Client name already exists";
-      } else {
-        this.errorMessage = e.graphQLErrors[0].extensions.code;
-      }
+
     }
   }
 
@@ -101,7 +97,7 @@ export default class CRUDClient extends Vue {
       return;
     }
     try {
-      await updateClient({...this.meta, name: this.clientName});
+      await updateClient(this.meta.id, {...this.meta, name: this.clientName});
       this.isPopupVisible = false;
       this.$emit('update');
     } catch (e) {

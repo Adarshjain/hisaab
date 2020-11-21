@@ -1,41 +1,47 @@
 export interface Client {
-    _id: string
-    _ts: number
+    id: string
     name: string
     balance: number
 }
 
-export interface ClientPage {
-    data: Client[]
-    after?: string
-    before?: string
-}
-
 export interface Company {
-    _id: string
-    _ts: number
+    id: string
     name: string
 }
 
-export interface CompanyPage {
-    data: Company[]
-    after?: string
-    before?: string
+export interface Transaction {
+    id: string
+    amount: number
+    type: "credit" | "debit"
+    companyId: string
+    date: number
+    narration?: string
+    clientId: string
 }
 
-export interface Transaction {
-    debit: number
-    _id: string
-    credit: number
-    company: Company
+export interface FlatTransaction {
+    id: string
+    debit: string
+    credit: string
+    internalDate: number
+    companyId: string
     date: string
     narration: string
-    client: Client
-    _ts: number
+    clientId: string
+}
+
+export interface TransactionInput {
+    id?: string
+    amount: number
+    type: "credit" | "debit"
+    companyId: string
+    date: number
+    narration?: string
+    clientId: string
 }
 
 export interface ClientInput {
-    _id?: string
+    id?: string
     name: string
     balance: number
 }

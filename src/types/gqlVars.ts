@@ -40,7 +40,7 @@ export const updateClientTag = (data: ClientInput) => {
     return gql`
         mutation{
             updateClient(
-                id:"${data._id}",
+                id:"${data.id}",
                 data: {
                     name: "${data.name}"
                 }

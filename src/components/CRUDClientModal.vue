@@ -1,6 +1,6 @@
 <template>
   <b-modal :active="show" @update:active="$emit('update:active',$event)" :can-cancel="false" has-modal-card>
-    <div class="modal-card" style="width: auto">
+    <form class="modal-card" style="width: auto" @submit.prevent="$emit('primaryAction')">
       <header class="modal-card-head">
         <p class="modal-card-title">Client</p>
       </header>
@@ -18,9 +18,9 @@
       </section>
       <footer class="modal-card-foot">
         <button class="button" type="button" @click="$emit('dismiss')">Cancel</button>
-        <button class="button is-primary" @click="$emit('primaryAction',clientName)">Save</button>
+        <button class="button is-primary" type="submit">Save</button>
       </footer>
-    </div>
+    </form>
   </b-modal>
 </template>
 
@@ -38,6 +38,3 @@ import Component from 'vue-class-component';
 })
 export default class CRUDClientModal extends Vue {}
 </script>
-<style lang="scss" scoped>
-
-</style>

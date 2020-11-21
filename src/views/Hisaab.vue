@@ -22,17 +22,15 @@ import {deleteClient, fetchClients} from "@/api";
 })
 export default class Hisaab extends Vue {
   clients: Client[] = [];
-  loaded = false
 
   async mounted() {
     await this.updateClients();
   }
 
-  async deleteClient(_id: string) {
+  async deleteClient(id: string) {
     try {
-      const index = this.clients.findIndex(client => client._id === _id);
-      await deleteClient(_id);
-      this.clients.splice(index, 1);
+      await deleteClient(id);
+      await this.updateClients();
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +38,15 @@ export default class Hisaab extends Vue {
 
   async updateClients() {
     const resp = await fetchClients();
-    this.clients = resp.data.clients.data;
+    this.clients = resp.docs.map(d => {
+          const data = d.data();
+          return {
+            name: data.name,
+            balance: data.balance,
+            id: d.id
+          }
+        }
+    )
   }
 }
 </script>

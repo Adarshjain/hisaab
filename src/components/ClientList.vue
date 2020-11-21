@@ -1,20 +1,22 @@
 <template>
   <div class="h-client-list-container">
-    <div v-for="client in clients" :key="client._id" class="box">
-        <p class="title">{{ client.name }}</p>
-        <p class="content">Balance: {{ client.balance || 0 }}</p>
-        <div class="is-flex">
-          <b-button class="is-flex-grow-1" @click="addEntry">Add entry</b-button>
-          <CRUDClient
-              :meta="client"
-              class="is-flex-grow-1 is-flex"
-              custom-class="is-flex-grow-1 h-client-edit-button"
-              trigger-name="Edit"
-              @update="$emit('update')"
-          />
-          <b-button class="is-flex-grow-1" @click="deleteClientPrompt(client._id)">Delete</b-button>
-        </div>
+    <div v-for="client in clients" :key="client.id" class="box">
+      <p class="title">{{ client.name }}</p>
+      <p class="content">Balance: {{ client.balance || 0 }}</p>
+      <div class="is-flex">
+        <router-link :to="`/client/${client.id}`">
+          <b-button class="is-flex-grow-1">Add entry</b-button>
+        </router-link>
+        <CRUDClient
+            :meta="client"
+            class="is-flex-grow-1 is-flex"
+            custom-class="is-flex-grow-1 h-client-edit-button"
+            trigger-name="Edit"
+            @update="$emit('update')"
+        />
+        <b-button class="is-flex-grow-1" @click="deleteClientPrompt(client.id)">Delete</b-button>
       </div>
+    </div>
   </div>
 </template>
 
@@ -35,19 +37,16 @@ export default class ClientList extends Vue {
   clients!: Client[];
   clientName = "";
 
-  deleteClientPrompt(_id: string) {
+  deleteClientPrompt(id: string) {
     this.$buefy.dialog.confirm({
       type: "is-danger",
       message: 'Delete client and its transactions?',
-      onConfirm: () => this.$emit('delete', _id)
+      onConfirm: () => this.$emit('delete', id)
     })
-  }
-
-  addEntry() {
   }
 }
 </script>
-<style lang="css">
+<style scoped>
 .h-client-list-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

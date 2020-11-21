@@ -7,12 +7,12 @@ const routes: Array<RouteConfig> = [
     {
         path: '/',
         name: 'Home',
-        component: () => import(/* webpackChunkName: "about" */ '@/Hisaab.vue')
+        component: () => import(/* webpackChunkName: "hisaab" */ '@/views/Hisaab.vue')
     },
     {
         path: '/client/:clientId',
         name: 'Client',
-        component: () => import(/* webpackChunkName: "about" */ '@/views/Client.vue')
+        component: () => import(/* webpackChunkName: "client" */ '@/views/ClientDetails.vue')
     }
 ]
 
