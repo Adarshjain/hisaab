@@ -29,6 +29,7 @@
               v-model="transaction.type"
               name="type"
               native-value="credit"
+              :disabled="isEditMode"
           >
             Credit
           </b-radio-button>
@@ -36,6 +37,7 @@
               v-model="transaction.type"
               name="type"
               native-value="debit"
+              :disabled="isEditMode"
           >
             Debit
           </b-radio-button>
@@ -73,7 +75,19 @@ import {formatDate} from "@/helper";
 
 @Component({
   name: 'CRUDTransactionModal',
-  props: ['show', 'transaction'],
+  props: {
+    show: {
+      type: Boolean
+    },
+    transaction: {
+      type: Object,
+      required: true
+    },
+    isEditMode: {
+      type: Boolean,
+      default: false
+    },
+  },
   model: {
     event: 'update',
     prop: 'transaction'

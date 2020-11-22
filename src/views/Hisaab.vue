@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import {Component, Vue} from 'vue-property-decorator';
-import CRUDClient from "@/components/CRUDClient.vue";
+import CRUDClient from "@/components/client/CRUDClient.vue";
 import ClientList from "@/components/ClientList.vue";
 // eslint-disable-next-line no-unused-vars
 import {Client} from "@/types/types";
@@ -39,7 +39,7 @@ export default class Hisaab extends Vue {
       await deleteClient(id);
       await this.updateClients();
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }
 

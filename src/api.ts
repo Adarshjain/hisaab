@@ -40,7 +40,6 @@ interface ClientEditMW {
 
 
 import firestore = firebase.firestore;
-import DocumentReference = firebase.firestore.DocumentReference;
 import DocumentData = firebase.firestore.DocumentData;
 import QuerySnapshot = firebase.firestore.QuerySnapshot;
 
@@ -66,8 +65,9 @@ export function fetchClient(id: string) {
     return db.collection(CLIENT).doc(id).get({source: "server"});
 }
 
-export async function addClient(client: ClientInput): Promise<DocumentReference<any>> {
-    return db.collection(CLIENT).add(client);
+export async function addClient(client: ClientInput): Promise<void> {
+    const ref = db.collection(CLIENT).doc();
+    return ref.set({...client, id: ref.id});
 }
 
 export async function deleteClient(id: string): Promise<void> {
@@ -79,8 +79,9 @@ export async function updateClient(id: string, client: ClientInput): Promise<voi
     return db.collection(CLIENT).doc(id).update(client);
 }
 
-export async function addTransaction(transaction: TransactionInput): Promise<DocumentReference<DocumentData>> {
-    return db.collection(TRANSACTION).add(transaction);
+export async function addTransaction(transaction: TransactionInput): Promise<void> {
+    const ref = db.collection(TRANSACTION).doc();
+    return ref.set({...transaction, id: ref.id});
 }
 
 export async function deleteTransaction(id: string): Promise<void> {

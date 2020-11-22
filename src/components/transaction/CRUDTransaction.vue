@@ -9,6 +9,7 @@
         :transaction="meta"
         @dismiss="dismissPopup"
         @primaryAction="onPrimaryAction"
+        :isEditMode="isEditMode"
     />
   </div>
 </template>
@@ -16,11 +17,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {addTransaction, updateTransaction} from "@/api";
+import {addTransaction, fetchClient, updateClient, updateTransaction} from "@/api";
 import CRUDTransactionModal from "@/components/transaction/CRUDTransactionModal.vue";
 import {Watch} from "vue-property-decorator";
 // eslint-disable-next-line no-unused-vars
-import {Transaction} from "@/types/types";
+import {Client, Transaction} from "@/types/types";
 
 @Component({
   name: 'CRUDTransaction',
@@ -37,6 +38,10 @@ import {Transaction} from "@/types/types";
     meta: {
       type: Object,
       required: true
+    },
+    isEditMode: {
+      type: Boolean,
+      default: false
     }
   }
 })
@@ -46,7 +51,7 @@ export default class CRUDTransaction extends Vue {
   isError = false;
   errorMessage = "";
   CRUDType: "ADD" | "EDIT" = "ADD";
-  tempMeta: Transaction = this.meta;
+  tempMeta: Transaction = JSON.parse(JSON.stringify(this.meta));
 
   dismissPopup() {
     this.isPopupVisible = false;
@@ -83,6 +88,7 @@ export default class CRUDTransaction extends Vue {
   async addTransaction() {
     try {
       await addTransaction(this.meta);
+      await this.updateClientBalance(this.meta);
       this.dismissPopup();
       this.$emit('update');
     } catch (e) {
@@ -94,11 +100,23 @@ export default class CRUDTransaction extends Vue {
   async updateTransaction() {
     try {
       await updateTransaction(this.meta.id, this.meta);
+      await this.updateClientBalance(this.meta, this.tempMeta);
       this.dismissPopup();
       this.$emit('update');
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
+  }
+
+  async updateClientBalance(transaction: Transaction, oldTransaction?: Transaction) {
+    let client = (await fetchClient(transaction.clientId)).data() as Client;
+    const amount = oldTransaction ? transaction.amount - oldTransaction.amount : transaction.amount;
+    if (transaction.type === "credit") {
+      client.balance += amount;
+    } else {
+      client.balance -= amount;
+    }
+    await updateClient(client.id, client);
   }
 
 }

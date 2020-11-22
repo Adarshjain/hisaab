@@ -30,13 +30,12 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 // eslint-disable-next-line no-unused-vars
 import {Client} from "@/types/types";
-import CRUDClientModal from "@/components/CRUDClientModal.vue";
-import CRUDClient from "@/components/CRUDClient.vue";
-import {formatCurrency} from "@/helper";
+import CRUDClient from "@/components/client/CRUDClient.vue";
+import {formatCurrencyWithSymbol} from "@/helper";
 
 @Component({
   name: 'ClientList',
-  components: {CRUDClient, CRUDClientModal},
+  components: {CRUDClient},
   props: ['clients']
 })
 export default class ClientList extends Vue {
@@ -52,13 +51,7 @@ export default class ClientList extends Vue {
   }
 
   formatCurrency(amount: number) {
-    if (amount === 0) {
-      return "₹ 0";
-    }
-    if (amount < 0) {
-      return "₹ -" + formatCurrency(-amount);
-    }
-    return "₹ " + formatCurrency(amount);
+    return formatCurrencyWithSymbol(amount)
   }
 }
 </script>

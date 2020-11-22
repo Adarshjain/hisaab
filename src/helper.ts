@@ -17,3 +17,13 @@ export function formatCurrency(amount: number): string {
     }
     return splits.join(',');
 }
+
+export function formatCurrencyWithSymbol(amount: number) {
+    if (amount === 0) {
+        return "₹ 0";
+    }
+    if (amount < 0) {
+        return "- ₹" + formatCurrency(-amount);
+    }
+    return "₹ " + formatCurrency(amount);
+}

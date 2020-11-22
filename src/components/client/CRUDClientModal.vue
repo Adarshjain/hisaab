@@ -1,10 +1,13 @@
 <template>
   <b-modal :active="show" @update:active="$emit('update:active',$event)" :can-cancel="false" has-modal-card>
-    <form class="modal-card" style="width: auto" @submit.prevent="$emit('primaryAction')">
+    <form class="modal-card"
+          style="min-width: 300px;max-width: 95vw;margin: auto"
+          @submit.prevent="$emit('primaryAction')"
+    >
       <header class="modal-card-head">
         <p class="modal-card-title">Client</p>
       </header>
-      <section class="modal-card-body" style="min-width: 400px;max-width: 90vw;">
+      <section class="modal-card-body">
         <b-field :message="errorMessage" :type="isError ? 'is-danger':''" label="Name">
           <b-input
               :value="clientName"

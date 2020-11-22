@@ -5,6 +5,11 @@
         <img alt="MLI" height="50" src="/assets/mli.png" width="50">
       </router-link>
       <p v-if="client" class="is-size-5 ml-3 mb-0">{{ client.name }}</p>
+      <p
+          v-if="client"
+          :class="{'has-text-danger':client.balance < 0, 'has-text-success':!(client.balance < 0) }"
+          class="is-size-5 ml-3 mb-0"
+      >{{ formatCurrency(client.balance) }}</p>
       <CRUDTransaction :meta="newMeta" custom-class="is-primary" style="margin-left: auto;"
                        triggerName="Add transaction"
                        @update="resetAndReload"/>
@@ -34,6 +39,7 @@
               custom-class="is-primary"
               triggerName="Add transaction"
               @update="resetAndReload"
+              isEditMode
           >
             <span slot="trigger" class="icon is-clickable table-action-icons">
               <i class="mdi mdi-pencil mdi-24px"></i>
@@ -51,11 +57,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {deleteTransaction, fetchClient, getTransactionOfClient} from "@/api";
+import {deleteTransaction, fetchClient, getTransactionOfClient, updateClient} from "@/api";
 // eslint-disable-next-line no-unused-vars
 import {Client, FlatTransaction, Transaction, TransactionInput} from '@/types/types';
 import CRUDTransaction from "@/components/transaction/CRUDTransaction.vue";
-import {formatCurrency, formatDate} from "@/helper";
+import {formatCurrency, formatCurrencyWithSymbol, formatDate} from "@/helper";
 
 @Component({
   name: 'ClientDetails',
@@ -76,9 +82,9 @@ export default class ClientDetails extends Vue {
     }
   }
 
-  resetAndReload() {
+  async resetAndReload() {
     this.resetMeta();
-    this.fetchTableData();
+    await Promise.all([this.fetchTableData(), this.loadClient()]);
   }
 
   async fetchTableData() {
@@ -115,14 +121,34 @@ export default class ClientDetails extends Vue {
     try {
       this.isTableLoaded = false;
       await deleteTransaction(transaction.id);
-      await this.fetchTableData();
+      await this.updateClientBalance(transaction);
+      await this.resetAndReload();
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
+  }
+
+  async updateClientBalance(transaction: FlatTransaction) {
+    let client = (await fetchClient(transaction.clientId)).data() as Client;
+    if (transaction.type === "credit") {
+      client.balance -= transaction.amount;
+    } else {
+      client.balance += transaction.amount;
+    }
+    await updateClient(client.id, client);
   }
 
   async mounted() {
     this.clientId = this.$route.params.clientId;
+    try {
+      await this.resetAndReload();
+      this.isLoaded = true;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  async loadClient() {
     try {
       const data = (await fetchClient(this.clientId)).data();
       if (data === undefined) {
@@ -134,9 +160,6 @@ export default class ClientDetails extends Vue {
         balance: data.balance,
         id: this.clientId
       };
-      this.isLoaded = true;
-      this.resetMeta();
-      this.$nextTick(this.fetchTableData)
     } catch (e) {
       console.error(e);
     }
@@ -163,6 +186,10 @@ export default class ClientDetails extends Vue {
       companyId: transaction.companyId,
       date: transaction.internalDate
     }
+  }
+
+  formatCurrency(amount: number) {
+    return formatCurrencyWithSymbol(amount)
   }
 }
 </script>

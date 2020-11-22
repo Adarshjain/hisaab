@@ -17,7 +17,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {addClient, updateClient} from "@/api";
-import CRUDClientModal from "@/components/CRUDClientModal.vue";
+import CRUDClientModal from "@/components/client/CRUDClientModal.vue";
 import {Watch} from "vue-property-decorator";
 // eslint-disable-next-line no-unused-vars
 import {Client} from "@/types/types";
@@ -89,7 +89,6 @@ export default class CRUDClient extends Vue {
     }
   }
 
-
   async updateClient() {
     if (this.clientName === "") {
       this.isError = true;
@@ -101,7 +100,7 @@ export default class CRUDClient extends Vue {
       this.isPopupVisible = false;
       this.$emit('update');
     } catch (e) {
-      console.log(e);
+      console.error(e);
       this.isError = true;
       if (e.graphQLErrors[0].extensions.code === "instance not unique") {
         this.errorMessage = "Client name already exists";
