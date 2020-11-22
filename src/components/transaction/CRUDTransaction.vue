@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <b-button :class="customClass" @click="isPopupVisible = true">{{ triggerName }}</b-button>
+  <div class="trans-wrapper">
+    <div class="trans-trigger" @click="isPopupVisible = true">
+      <slot v-if="$slots.trigger" name="trigger"/>
+      <b-button v-else :class="customClass">{{ triggerName }}</b-button>
+    </div>
     <CRUDTransactionModal
         :show="isPopupVisible"
         :transaction="meta"

@@ -28,6 +28,8 @@ export interface FlatTransaction {
     date: string
     narration: string
     clientId: string
+    type: "credit" | "debit"
+    amount: number
 }
 
 export interface TransactionInput {
