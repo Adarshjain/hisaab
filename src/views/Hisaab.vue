@@ -1,6 +1,13 @@
 <template>
   <div id="app">
-    <CRUDClient triggerName="Add Client" @update="updateClients"/>
+    <div class="is-flex p-2 is-align-items-center mb-0">
+      <router-link class="is-flex" to="/">
+        <img alt="MLI" height="50" src="/assets/mli.png" width="50">
+      </router-link>
+      <p class="is-size-5 ml-3 mb-0">Metal Letters India</p>
+
+      <CRUDClient class="ml-auto" custom-class="is-primary" triggerName="Add Client" @update="updateClients"/>
+    </div>
     <ClientList
         :clients="clients"
         @delete="deleteClient"
@@ -50,4 +57,9 @@ export default class Hisaab extends Vue {
   }
 }
 </script>
+<style>
+.ml-auto {
+  margin-left: auto;
+}
+</style>
 
