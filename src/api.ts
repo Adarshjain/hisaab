@@ -71,6 +71,7 @@ export async function addClient(client: ClientInput): Promise<DocumentReference<
 }
 
 export async function deleteClient(id: string): Promise<void> {
+    await deleteTransactionOfClient(id);
     return db.collection(CLIENT).doc(id).delete();
 }
 
@@ -94,4 +95,11 @@ export async function getTransactionOfClient(clientId: string): Promise<QuerySna
     return db.collection(TRANSACTION)
         .where("clientId", "==", clientId)
         .get({source: "server"})
+}
+
+export async function deleteTransactionOfClient(clientId: string) {
+    const batch = db.batch();
+    const trans = await getTransactionOfClient(clientId);
+    trans.docs.forEach(d => batch.delete(d.ref));
+    await batch.commit();
 }

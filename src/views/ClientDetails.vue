@@ -88,7 +88,6 @@ export default class ClientDetails extends Vue {
     this.transactionData = resp.docs
         .map(d => {
           const data = d.data() as Transaction;
-          console.log(data.date);
           return {
             ...data,
             id: d.id,
@@ -96,7 +95,6 @@ export default class ClientDetails extends Vue {
         })
         .sort((dataA, dataB) => dataB.date - dataA.date)
         .map((data: Transaction) => {
-          console.log(data.date);
           return {
             companyId: data.companyId,
             narration: data.narration || "",
